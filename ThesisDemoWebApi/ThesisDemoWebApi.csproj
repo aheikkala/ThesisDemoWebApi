@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\GroupController.cs" />
+    <Compile Include="Api\HubControllerBase.cs" />
     <Compile Include="Api\UserController.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">

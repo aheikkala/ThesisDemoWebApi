@@ -69,5 +69,31 @@ namespace ThesisDemoWebApi.Api
 
             return Request.CreateResponse(HttpStatusCode.NoContent);
         }
+
+
+        [Route("user/{userId:int}/group")]
+        [HttpPost]
+        public HttpResponseMessage CreateGroup(int userID, GroupData data)
+        {
+            var group = new Group
+            {
+                GroupName = data.Name,
+                CreationDate = DateTime.Now
+            };
+
+            var user = context.Users.Find(userID);
+
+            if (user == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound); //parempi StatusCode?
+            }
+
+            context.Groups.Add(group);
+            user.Groups.Add(group);
+
+            context.SaveChanges();
+
+            return Request.CreateResponse(HttpStatusCode.NoContent);
+        }
     }
 }

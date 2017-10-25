@@ -5,6 +5,7 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
 
+
 namespace ThesisDemoWebApi.Hubs
 {
     public class ChatHub : Hub
@@ -13,18 +14,10 @@ namespace ThesisDemoWebApi.Hubs
 
         public void Send(string message)
         {
-            //var msg = new Message
-            //{
-            //    Data = message
-            //};
-            //var db = new MeContext();
-            //db.Messages.Add(msg);
-            //db.SaveChanges();
+           
 
             Clients.Group((string)Clients.Caller.currentGroup).addMessage(Clients.Caller.userName, message, (string)Clients.Caller.currentGroup);
             //Clients.All.addMessage(Clients.Caller.userName, message);
-
-            //_chat.Send(Clients.Caller.userName, message);
 
         }
 
