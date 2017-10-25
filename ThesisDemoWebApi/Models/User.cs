@@ -9,6 +9,6 @@ namespace ThesisDemoWebApi.Models
     {
         public int ID { get; set; }
         public string UserName { get; set; }
-        public virtual List<Group> Groups { get; set; }
+        public List<Group> Groups { get; set; }
     }
 }
