@@ -12,8 +12,11 @@ namespace ThesisDemoWebApi
             // Web API configuration and services
 
             // Web API routes
+
+            // Attribute routing
             config.MapHttpAttributeRoutes();
 
+            // Convention-based routing
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

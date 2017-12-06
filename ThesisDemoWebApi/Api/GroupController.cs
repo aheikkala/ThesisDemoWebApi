@@ -10,7 +10,7 @@ using ThesisDemoWebApi.Repository;
 
 namespace ThesisDemoWebApi.Api
 {
-    // DTO for projecting entity (viewmodel)
+    // DTO for projecting database entity (viewmodel)
     public class GroupData
     {
         public int ID { get; set; }
@@ -71,21 +71,29 @@ namespace ThesisDemoWebApi.Api
         }
 
 
-        [Route("user/{userId:int}/group")]
+        [Route("api/user/{userID:int}/group")]
         [HttpPost]
         public HttpResponseMessage CreateGroup(int userID, GroupData data)
         {
+            //if (!ModelState.IsValid)
+            //{
+            //    return Request.CreateResponse(HttpStatusCode.BadRequest);
+            //    //return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState); // serializes ModelState that includes list of errors
+            //}
+
             var group = new Group
             {
                 GroupName = data.Name,
                 CreationDate = DateTime.Now
             };
 
-            var user = context.Users.Find(userID);
+            //var user = context.Users.Find(userID);
+            var user = context.Users.Include("Groups").SingleOrDefault(x => x.ID == userID);
 
             if (user == null)
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound); //parempi StatusCode?
+                return Request.CreateResponse(HttpStatusCode.BadRequest); // client error
+                //return Request.CreateResponse(HttpStatusCode.BadRequest, new { errors = new string[] {"Bad request."} });
             }
 
             context.Groups.Add(group);
@@ -93,7 +101,7 @@ namespace ThesisDemoWebApi.Api
 
             context.SaveChanges();
 
-            return Request.CreateResponse(HttpStatusCode.NoContent);
+            return Request.CreateResponse(HttpStatusCode.NoContent); // success status code but does not return a body
         }
     }
 }
