@@ -11,13 +11,13 @@ namespace ThesisDemoWebApi.Api
     public abstract class HubControllerBase<THub> : ApiController
     where THub : IHub
     {
-        Lazy<IHubContext> hub = new Lazy<IHubContext>(
+        private readonly Lazy<IHubContext> _hub = new Lazy<IHubContext>(
             () => GlobalHost.ConnectionManager.GetHubContext<THub>()
         );
 
         protected IHubContext Hub
         {
-            get { return hub.Value; }
+            get { return _hub.Value; }
         }
     }
 }

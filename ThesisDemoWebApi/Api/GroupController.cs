@@ -75,11 +75,10 @@ namespace ThesisDemoWebApi.Api
         [HttpPost]
         public HttpResponseMessage CreateGroup(int userID, GroupData data)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return Request.CreateResponse(HttpStatusCode.BadRequest);
-            //    //return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState); // serializes ModelState that includes list of errors
-            //}
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState); // serializes ModelState that includes list of errors
+            }
 
             var group = new Group
             {
