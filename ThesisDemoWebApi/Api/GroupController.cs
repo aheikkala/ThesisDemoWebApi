@@ -17,6 +17,7 @@ namespace ThesisDemoWebApi.Api
         public int ID { get; set; }
         public string Name { get; set; }
         public List<UserData> Users { get; set; }
+        public List<MessageData> Messages { get; set; }
     }
 
     public class GroupController : ApiController
@@ -38,7 +39,8 @@ namespace ThesisDemoWebApi.Api
                 {
                     ID = g.ID,
                     Name = g.GroupName,
-                    Users = g.Users.Select(x => new UserData { ID = x.ID, Name = x.UserName }).ToList()
+                    Users = g.Users.Select(x => new UserData { ID = x.ID, Name = x.UserName }).ToList(),
+                    Messages = g.Messages.Select(x => new MessageData { UserName = x.User.UserName, Message = x.Data, TimeStamp = x.Timestamp }).ToList()
                 };
 
             var group = query.SingleOrDefault();

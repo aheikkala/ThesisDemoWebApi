@@ -15,8 +15,10 @@ namespace ThesisDemoWebApi.Api
     public class MessageData
     {
         public int UserID { get; set; }
+        public string UserName { get; set; }
         public int GroupID { get; set; }
         public string Message { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 
     public class MessageController : HubControllerBase<ChatHub>
