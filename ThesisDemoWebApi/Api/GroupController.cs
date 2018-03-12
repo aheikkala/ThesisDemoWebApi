@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Data.Entity;
 using ThesisDemoWebApi.Models;
 using ThesisDemoWebApi.Repository;
+using ThesisDemoWebApi.Hubs;
 
 namespace ThesisDemoWebApi.Api
 {
@@ -15,6 +16,7 @@ namespace ThesisDemoWebApi.Api
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public List<UserData> Users { get; set; }
     }
 
     public class GroupController : ApiController
@@ -35,10 +37,20 @@ namespace ThesisDemoWebApi.Api
                 select new GroupData
                 {
                     ID = g.ID,
-                    Name = g.GroupName
+                    Name = g.GroupName,
+                    Users = g.Users.Select(x => new UserData { ID = x.ID, Name = x.UserName }).ToList()
                 };
 
             var group = query.SingleOrDefault();
+
+            foreach (var u in group.Users)
+            {
+                if (ChatHub._connections.GetConnections(u.Name).Count() > 0)
+                {
+                    u.Online = true;
+                }
+            }
+
 
             if (group == null)
             {
@@ -50,7 +62,7 @@ namespace ThesisDemoWebApi.Api
 
         // PUT /api/group/1
         // {name:testgroup}
-        public HttpResponseMessage Put(int id, GroupData data)
+        public HttpResponseMessage Put(int id, GroupData data) //id two times?
         {
             var query =
                 from g in context.Groups
@@ -102,5 +114,30 @@ namespace ThesisDemoWebApi.Api
 
             return Request.CreateResponse(HttpStatusCode.NoContent); // success status code but does not return a body
         }
+
+        //[Route("api/user/{userID:int}/group")]
+        //[HttpGet]
+        //public HttpResponseMessage GetGroupByUser(int userID)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState); // serializes ModelState that includes list of errors
+        //    }
+
+        //    var user = context.Users.Include("Groups").SingleOrDefault(u => u.ID == userID);
+
+        //    if (user == null)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest); // client error
+        //        //return Request.CreateResponse(HttpStatusCode.BadRequest, new { errors = new string[] {"Bad request."} });
+        //    }
+
+        //    context.Groups.Add(group);
+        //    user.Groups.Add(group);
+
+        //    context.SaveChanges();
+
+        //    return Request.CreateResponse(HttpStatusCode.NoContent); // success status code but does not return a body
+        //}
     }
 }

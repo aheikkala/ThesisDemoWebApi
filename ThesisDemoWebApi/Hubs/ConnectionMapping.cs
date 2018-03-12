@@ -35,6 +35,17 @@ namespace ThesisDemoWebApi.Hubs
             }
         }
 
+        //public bool GetConnections(T key)
+        //{
+        //    HashSet<string> connections;
+        //    if (_connections.TryGetValue(key, out connections))
+        //    {
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
         public IEnumerable<string> GetConnections(T key)
         {
             HashSet<string> connections;

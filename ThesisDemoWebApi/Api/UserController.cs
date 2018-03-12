@@ -15,6 +15,8 @@ namespace ThesisDemoWebApi.Api
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public bool Online { get; set; }
+        public List<GroupData> Groups { get; set; }
     }
 
     public class UserController : ApiController
@@ -39,6 +41,25 @@ namespace ThesisDemoWebApi.Api
                     Name = u.UserName
                 };
             return result.ToArray();
+        }
+
+        public HttpResponseMessage Get(int id)
+        {
+            var user = context.Users.Include("Groups").SingleOrDefault(u => u.ID == id);
+
+            if (user == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            var userData = new UserData
+            {
+                ID = user.ID,
+                Name = user.UserName,
+                Groups = user.Groups.Select(x => new GroupData { ID = x.ID, Name = x.GroupName}).ToList()
+            };
+
+            return Request.CreateResponse(HttpStatusCode.OK, userData);
         }
     }
 }

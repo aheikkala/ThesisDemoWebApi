@@ -10,7 +10,7 @@ namespace ThesisDemoWebApi.Hubs
 {
     public class ChatHub : Hub
     {
-        private readonly static ConnectionMapping<string> _connections = new ConnectionMapping<string>();
+        public readonly static ConnectionMapping<string> _connections = new ConnectionMapping<string>();
 
         public void Send(string message)
         {
