@@ -47,7 +47,7 @@ namespace ThesisDemoWebApi.Api
 
             foreach (var u in group.Users)
             {
-                if (ChatHub._connections.GetConnections(u.Name).Count() > 0)
+                if (ChatHub.connections.GetConnections(u.ID).Count() > 0)
                 {
                     u.Online = true;
                 }
@@ -89,7 +89,14 @@ namespace ThesisDemoWebApi.Api
             group.Users.Add(user);
             context.SaveChanges();
 
-            //Hub.Clients.Group(data.ID.ToString()).
+            // Notify added user about new group.
+            foreach (var conn in ChatHub.connections.GetConnections(user.ID))
+            {
+                Hub.Clients.Client(conn).updateGroups();
+            };
+
+            // Notify users already in group about new user.
+            Hub.Clients.Group(data.ID.ToString()).updateUsersInGroup(data.ID);
 
             return Request.CreateResponse(HttpStatusCode.NoContent);
         }
