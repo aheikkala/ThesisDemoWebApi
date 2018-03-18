@@ -20,7 +20,7 @@ namespace ThesisDemoWebApi.Api
         public List<MessageData> Messages { get; set; }
     }
 
-    public class GroupController : ApiController
+    public class GroupController : HubControllerBase<ChatHub>
     {
         private DataContext context;
 
@@ -64,11 +64,11 @@ namespace ThesisDemoWebApi.Api
 
         // PUT /api/group/1
         // {name:testgroup}
-        public HttpResponseMessage Put(int id, GroupData data) //id two times?
+        public HttpResponseMessage Put(GroupData data) 
         {
             var query =
                 from g in context.Groups
-                where g.ID == id
+                where g.ID == data.ID
                 select g;
 
             var group = query.SingleOrDefault();
@@ -78,8 +78,18 @@ namespace ThesisDemoWebApi.Api
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            group.GroupName = data.Name;
+            //users.Where(x => !x.Groups.Exists(g=> g.ID == _iGroupID)).ToList()
+            //var users = context.Users.Where(u => data.Users.Select(o => o.ID).ToList().Contains(u.ID)).ToList();
+
+            var userToAdd = data.Users[0].ID;
+
+            var user = context.Users.SingleOrDefault(u => u.ID == userToAdd);
+
+            //group.GroupName = data.Name;
+            group.Users.Add(user);
             context.SaveChanges();
+
+            //Hub.Clients.Group(data.ID.ToString()).
 
             return Request.CreateResponse(HttpStatusCode.NoContent);
         }

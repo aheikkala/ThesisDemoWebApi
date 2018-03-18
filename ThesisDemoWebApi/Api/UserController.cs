@@ -38,7 +38,8 @@ namespace ThesisDemoWebApi.Api
                 select new UserData
                 {
                     ID = u.ID,
-                    Name = u.UserName
+                    Name = u.UserName,
+                    Groups = u.Groups.Select(x => new GroupData { ID = x.ID, Name = x.GroupName }).ToList()
                 };
             return result.ToArray();
         }
